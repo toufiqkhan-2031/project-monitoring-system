@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO - Certificate</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0a0c10,#0f1623);min-height:100vh;font-family:Arial,sans-serif;color:#e2e8f0}
+nav{background:rgba(10,12,16,0.97);border-bottom:1px solid #1e2333;padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:17px;font-weight:900;color:#00e5ff;letter-spacing:3px}
+.bk{background:#11141b;border:1px solid #1e2333;color:#94a3b8;border-radius:6px;padding:4px 12px;font-size:11px;text-decoration:none;cursor:pointer}
+.bk:hover{border-color:#00e5ff;color:#00e5ff}
+.pg{max-width:720px;margin:0 auto;padding:28px 20px}
+h1{font-size:22px;font-weight:800;margin-bottom:4px}
+h1 span{color:#00e5ff}
+.sub{color:#64748b;font-size:13px;margin-bottom:24px}
+.fc{background:#11141b;border:1px solid #1e2333;border-radius:14px;padding:26px;margin-bottom:20px}
+.ft{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#00e5ff;margin-bottom:18px}
+.fd{margin-bottom:14px}
+.fd label{display:block;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.fd input,.fd select{width:100%;background:#0a0c10;border:1px solid #1e2333;border-radius:8px;color:#e2e8f0;font-size:13px;padding:10px 14px;outline:none;transition:border-color 0.2s;font-family:Arial,sans-serif}
+.fd input:focus,.fd select:focus{border-color:#00e5ff}
+.fd select option{background:#0a0c10}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gbtn{background:linear-gradient(135deg,#00e5ff,#7c3aed);color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:4px}
+.gbtn:hover{opacity:0.88}
+.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:14px;display:none}
+.cw{display:none}
+.cw.on{display:block}
+.cbtns{display:flex;gap:10px;margin-bottom:16px}
+.pbtn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;padding:11px 22px;font-size:13px;font-weight:700;cursor:pointer}
+.pbtn:hover{opacity:0.9}
+@media(max-width:600px){.r2{grid-template-columns:1fr}}
+#cpaper{background:#fff;width:100%;font-family:Georgia,serif;color:#111;border-radius:6px;overflow:hidden;box-shadow:0 12px 50px rgba(0,0,0,0.5)}
+.co{border:10px solid #1a237e;margin:10px;border-radius:4px}
+.ci{border:3px solid #c9a227;margin:7px;padding:30px 38px;background:linear-gradient(180deg,#fffef7,#fefce8 50%,#fffef7);text-align:center;position:relative;overflow:hidden}
+.ci::before{content:"GYRO";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-25deg);font-size:130px;font-weight:900;color:rgba(26,35,126,0.04);pointer-events:none;font-family:Arial;white-space:nowrap}
+.ch{display:flex;align-items:center;justify-content:center;gap:16px;padding-bottom:14px;border-bottom:2px solid #c9a227;margin-bottom:16px}
+.clog{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.cct{text-align:left}
+.ccn{font-size:12px;font-weight:700;color:#1a237e;line-height:1.5;text-transform:uppercase;letter-spacing:0.4px;max-width:360px}
+.ccs{font-size:10px;color:#666;margin-top:3px;letter-spacing:0.5px}
+.cstar{color:#c9a227;font-size:16px;letter-spacing:6px;margin-bottom:8px}
+.ctit{font-size:30px;font-weight:700;color:#1a237e;letter-spacing:3px;text-transform:uppercase}
+.csub{font-size:11px;color:#c9a227;letter-spacing:5px;text-transform:uppercase;margin-top:3px;margin-bottom:16px}
+.cto{font-size:13px;color:#555;letter-spacing:0.5px;margin-bottom:5px}
+.cnam{font-size:30px;font-weight:700;color:#1a237e;font-style:italic;border-bottom:2px solid #c9a227;display:inline-block;padding-bottom:4px;margin:5px 0 4px}
+.cuid{font-size:12px;color:#555;margin-bottom:12px;letter-spacing:0.5px}
+.cbdy{font-size:13px;color:#333;line-height:1.9;max-width:500px;margin:0 auto 8px}
+.cprj{font-size:16px;font-weight:700;color:#1a237e;font-style:italic;margin:4px 0}
+.cgrd{display:inline-block;background:#1a237e;color:#fff;padding:5px 22px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;margin:10px 0 4px;text-transform:uppercase}
+.cgl{font-size:10px;color:#666;margin-bottom:4px}
+.cft{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:20px;padding-top:12px;border-top:1px solid #c9a227;align-items:end}
+.csg{text-align:center}
+.csl{border-top:1.5px solid #333;width:110px;margin:0 auto 5px}
+.csn{font-size:11px;font-weight:700;color:#1a237e}
+.cst{font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px}
+.csec{width:68px;height:68px;border-radius:50%;border:3px double #1a237e;display:flex;align-items:center;justify-content:center;margin:0 auto;background:radial-gradient(#e8eaf6,#fff)}
+.cset{font-size:7.5px;color:#1a237e;font-weight:700;text-align:center;line-height:1.4;text-transform:uppercase;padding:4px}
+.cdate{font-size:11px;color:#555;margin-top:12px}
+.ccid{font-size:9px;color:#bbb;margin-top:4px;letter-spacing:1px}
+@media print{
+  body{background:#fff!important}
+  nav,.fc,.cbtns,.err{display:none!important}
+  .pg{padding:0;max-width:100%}
+  .cw{display:block!important}
+  #cpaper{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">GYRO</div>
+  <a class="bk" onclick="history.back()">&larr; Back</a>
+</nav>
+
+<div class="pg">
+  <h1>Project Completion <span>Certificate</span></h1>
+  <p class="sub">Fill in the details to generate the official project completion certificate</p>
+
+  <div class="err" id="errBox"></div>
+
+  <div class="fc">
+    <div class="ft">Student &amp; Project Details</div>
+    <div class="fd">
+      <label>Student Full Name *</label>
+      <input type="text" id="f-name" placeholder="A B C">
+    </div>
+    <div class="r2">
+      <div class="fd">
+        <label>UUCMS Number *</label>
+        <input type="text" id="f-uucms" placeholder="e.g. U13XX23SXXX">
+      </div>
+      <div class="fd">
+        <label>Academic Year</label>
+        <input type="text" id="f-year" value="2024-25">
+      </div>
+    </div>
+    <div class="fd">
+      <label>Project Title *</label>
+      <input type="text" id="f-proj" placeholder="e.g. AI-Powered Project Monitoring System">
+    </div>
+    <div class="r2">
+      <div class="fd">
+        <label>Completion Date</label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="fd">
+        <label>Performance Grade</label>
+        <select id="f-grade">
+          <option value="Excellent">Excellent</option>
+          <option value="Very Good">Very Good</option>
+          <option value="Good">Good</option>
+          <option value="Satisfactory">Satisfactory</option>
+        </select>
+      </div>
+    </div>
+    <button class="gbtn" onclick="generateCert()">&#127941; Generate Certificate</button>
+  </div>
+
+  <div class="cw" id="certWrap">
+    <div class="cbtns">
+      <button class="pbtn" onclick="window.print()">&#128424; Print / Save as PDF</button>
+    </div>
+    <div id="cpaper">
+      <div class="co"><div class="ci">
+        <div class="ch">
+          <img class="clog" src="logo.jpg" alt="Logo" onerror="this.style.display='none'">
+          <div class="cct">
+            <div class="ccn"><h3>Smt. Parvathamma Shamanuru Shivashankarappa School of Hi-Tech Education, Davanagere</h3></div>
+            <div class="ccs">Affiliated to Davangere University &nbsp;&#9679;&nbsp; P.S.S.S.H.E &nbsp;&#9679;&nbsp; BEA</div>
+          </div>
+        </div>
+        <div class="cstar">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+        <div class="ctit">Certificate</div>
+        <div class="csub">of Project Completion</div>
+        <div class="cto">This is to proudly certify that</div>
+        <div class="cnam" id="c-name">Student Name</div>
+        <div class="cuid">UUCMS No: &nbsp;<b id="c-uucms">---</b></div>
+        <div class="cbdy">
+          a student of the Department of Bachelor of Computer Applications, has successfully
+          completed the Final Year Project titled
+          <div class="cprj" id="c-proj">"Project Title"</div>
+          during the academic year <b id="c-year">2024-25</b>.
+          The project was completed with full dedication and meets all the
+          required objectives set by the institution.
+        </div>
+        <div class="cgl">Performance Grade</div>
+        <div class="cgrd" id="c-grade">Excellent</div>
+        <div class="cft">
+          <div class="csg"><div class="csl"></div><div class="csn">Project Guide</div><div class="cst">Faculty Signature</div></div>
+          <div class="csg"><div class="csl"></div><div class="csn">H O D</div><div class="cst">P.S.S.S.H.E Davangere</div></div>
+          <div class="csg"><div class="csl"></div><div class="csn">Principal</div><div class="cst">P.S.S.S.H.E Davangere</div></div>
+        </div>
+        <div class="cdate">Date of Issue: <b id="c-date">---</b></div>
+        <div class="ccid" id="c-id">Certificate ID: GYRO-000000</div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var p=new URLSearchParams(window.location.search);
+  var s=p.get('student'); if(s) document.getElementById('f-name').value=s;
+  var pr=p.get('project'); if(pr) document.getElementById('f-proj').value=pr;
+})();
+document.getElementById('f-date').valueAsDate=new Date();
+
+function generateCert(){
+  var name=document.getElementById('f-name').value.trim();
+  var uucms=document.getElementById('f-uucms').value.trim();
+  var year=document.getElementById('f-year').value.trim();
+  var proj=document.getElementById('f-proj').value.trim();
+  var date=document.getElementById('f-date').value;
+  var grade=document.getElementById('f-grade').value;
+  var err=document.getElementById('errBox');
+  if(!name){err.textContent='Please enter Student Full Name.';err.style.display='block';document.getElementById('f-name').focus();return;}
+  if(!uucms){err.textContent='Please enter UUCMS Number.';err.style.display='block';document.getElementById('f-uucms').focus();return;}
+  if(!proj){err.textContent='Please enter Project Title.';err.style.display='block';document.getElementById('f-proj').focus();return;}
+  err.style.display='none';
+  var dateStr='---';
+  if(date){var d=new Date(date+'T00:00:00');dateStr=d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});}
+  var cid='GYRO-'+new Date().getFullYear()+'-'+Math.random().toString(36).substring(2,8).toUpperCase();
+  document.getElementById('c-name').textContent=name;
+  document.getElementById('c-uucms').textContent=uucms;
+  document.getElementById('c-proj').textContent='\u201c'+proj+'\u201d';
+  document.getElementById('c-year').textContent=year||'2024-25';
+  document.getElementById('c-grade').textContent=grade;
+  document.getElementById('c-date').textContent=dateStr;
+  document.getElementById('c-id').textContent='Certificate ID: '+cid;
+  var w=document.getElementById('certWrap');
+  w.classList.add('on');
+  setTimeout(function(){w.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+</script>
+</body>
+</html>

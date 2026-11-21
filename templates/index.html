@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO — AI Project Monitor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0a0c10,#0f1623,#0a0c10);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;overflow:hidden}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+.container{text-align:center;z-index:1}
+.logo{font-size:80px;font-weight:900;color:#00e5ff;letter-spacing:8px;opacity:0;animation:popIn 1s ease 0.3s forwards;text-shadow:0 0 40px rgba(0,229,255,0.4)}
+.tagline{font-size:16px;color:#64748b;letter-spacing:3px;text-transform:uppercase;margin-top:8px;opacity:0;animation:fadeUp 0.8s ease 1s forwards}
+.welcome{opacity:0;animation:fadeUp 0.8s ease 1.5s forwards;margin-top:40px}
+.welcome h2{font-size:28px;color:#e2e8f0;font-weight:700;margin-bottom:10px}
+.welcome p{color:#64748b;font-size:14px;margin-bottom:32px}
+.start-btn{display:inline-block;background:linear-gradient(135deg,#00e5ff,#7c3aed);color:#fff;text-decoration:none;padding:14px 40px;border-radius:50px;font-size:15px;font-weight:700;letter-spacing:1px;opacity:0;animation:fadeUp 0.8s ease 2s forwards;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(0,229,255,0.3)}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,229,255,0.5)}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:40px;opacity:0;animation:fadeUp 0.8s ease 2.2s forwards}
+.dot{width:6px;height:6px;border-radius:50%;background:#1e2333}
+.dot.active{background:#00e5ff}
+@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="container">
+  <div class="logo">GYRO</div>
+  <div class="tagline"> Project Monitoring System</div>
+  <div class="welcome">
+    <h2>Welcome to GYRO</h2>
+    <p>Ready to track your final year project </p>
+    <a href="/login" class="start-btn">Let's Get Started &rarr;</a>
+  </div>
+  <div class="dots">
+    <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+</div>
+</body>
+</html>

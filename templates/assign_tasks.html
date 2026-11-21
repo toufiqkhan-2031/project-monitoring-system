@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO — Assign Tasks</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0a0c10,#0f1623);min-height:100vh;font-family:Arial,sans-serif;color:#e2e8f0}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+nav{background:rgba(10,12,16,0.95);border-bottom:1px solid #1e2333;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:18px;font-weight:900;color:#00e5ff;letter-spacing:3px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.back-btn{background:#11141b;border:1px solid #1e2333;color:#94a3b8;border-radius:6px;padding:5px 12px;font-size:11px;text-decoration:none}
+.back-btn:hover{border-color:#00e5ff;color:#00e5ff}
+.logout{background:transparent;border:1px solid #1e2333;color:#64748b;border-radius:6px;padding:5px 12px;font-size:11px;text-decoration:none}
+.main{max-width:960px;margin:0 auto;padding:32px 20px;position:relative;z-index:1}
+h1{font-size:22px;font-weight:800;margin-bottom:4px}
+h1 span{color:#00e5ff}
+.sub{color:#64748b;font-size:13px;margin-bottom:28px}
+.cards-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.assign-card{background:#11141b;border:1px solid #1e2333;border-radius:14px;overflow:hidden;transition:border-color 0.2s}
+.assign-card:hover{border-color:#1e3a5f}
+.ac-head{background:#181c26;border-bottom:1px solid #1e2333;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:rgba(0,229,255,0.1);color:#00e5ff;border:1px solid rgba(0,229,255,0.2)}
+.sname{font-size:14px;font-weight:700}
+.ac-body{padding:16px}
+.task-container{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.task-card{background:#0a0c10;border:1px solid #1e2333;border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;position:relative}
+.task-card textarea{flex:1;background:transparent;border:none;color:#e2e8f0;font-size:12px;outline:none;resize:none;min-height:36px;font-family:Arial,sans-serif;line-height:1.5}
+.remove-task{background:#ef4444;color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center}
+.add-task-btn{background:#11141b;color:#00e5ff;border:1px dashed rgba(0,229,255,0.3);border-radius:6px;padding:7px;width:100%;font-size:12px;cursor:pointer;transition:all 0.2s;margin-bottom:10px}
+.add-task-btn:hover{background:rgba(0,229,255,0.06);border-color:#00e5ff}
+.assign-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;width:100%;transition:opacity 0.2s}
+.assign-btn:hover{opacity:0.9}
+.view-btn{background:#11141b;color:#94a3b8;border:1px solid #1e2333;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;margin-top:8px;width:100%;transition:all 0.2s}
+.view-btn:hover{border-color:#7c3aed;color:#a78bfa}
+.task-list{display:none;margin-top:10px;background:#0a0c10;border:1px solid #1e2333;border-radius:8px;overflow:hidden}
+.task-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #1e2333;font-size:12px}
+.task-row:last-child{border-bottom:none}
+.task-text{color:#94a3b8;flex:1}
+.del-btn{background:#ef4444;color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:10px;cursor:pointer}
+.status-pill{padding:2px 8px;border-radius:10px;font-size:10px;text-transform:uppercase}
+.sp{background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)}
+.sc{background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2)}
+.empty{color:#64748b;font-size:12px;text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<nav>
+  <div class="logo">GYRO</div>
+  <div class="nav-right">
+    <a href="{{ url_for('project_overview', project_code=project_code) }}" class="back-btn">&larr; Overview</a>
+    <a href="/logout" class="logout">Logout</a>
+  </div>
+</nav>
+<div class="main">
+  <h1>Assign <span>Tasks</span></h1>
+  <p class="sub">Create and assign tasks to students in your project</p>
+
+  {% if students %}
+  <div class="cards-container">
+    {% for student in students %}
+    <div class="assign-card">
+      <div class="ac-head">
+        <div class="av">{{ student[0][0]|upper }}</div>
+        <div class="sname">{{ student[0] }}</div>
+      </div>
+      <div class="ac-body">
+        <form method="POST">
+          <input type="hidden" name="username" value="{{ student[0] }}">
+          <div class="task-container">
+            <div class="task-card">
+              <textarea name="task[]" placeholder="Enter task details..."></textarea>
+              <button type="button" class="remove-task" onclick="removeTask(this)">&#10005;</button>
+            </div>
+          </div>
+          <button type="button" class="add-task-btn" onclick="addTask(this)">+ Add Task</button>
+          <button type="submit" name="assign_task" class="assign-btn">Assign Tasks</button>
+        </form>
+        <button class="view-btn" onclick="toggleTasks('{{ student[0] }}')">View Assigned Tasks</button>
+        <div class="task-list" id="tasks-{{ student[0] }}">
+          {% for t in all_tasks if t[0] == student[0] %}
+          <div class="task-row">
+            <span class="task-text">{{ t[1] }}</span>
+            <span class="status-pill {% if t[2] == 'Completed' %}sc{% else %}sp{% endif %}">{{ t[2] }}</span>
+            <form method="POST" style="margin-left:8px">
+              <input type="hidden" name="task_id" value="{{ t[2] }}">
+              <button type="submit" name="delete_task" class="del-btn">Del</button>
+            </form>
+          </div>
+          {% else %}
+          <div class="empty">No tasks assigned yet</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:60px 20px;color:#64748b">
+    <div style="font-size:40px;margin-bottom:14px">&#128100;</div>
+    <div style="font-size:16px;font-weight:700;color:#94a3b8;margin-bottom:8px">No students enrolled yet</div>
+    <div style="font-size:13px">Students need to join using the project ID first</div>
+  </div>
+  {% endif %}
+</div>
+<script>
+function addTask(btn){
+  var form=btn.closest('form');
+  var container=form.querySelector('.task-container');
+  var div=document.createElement('div');div.className='task-card';
+  div.innerHTML='<textarea name="task[]" placeholder="Enter task details..."></textarea><button type="button" class="remove-task" onclick="removeTask(this)">&#10005;</button>';
+  container.appendChild(div);
+}
+function removeTask(btn){
+  var card=btn.parentElement;
+  if(card.parentElement.children.length>1)card.remove();
+}
+function toggleTasks(u){
+  var d=document.getElementById('tasks-'+u);
+  d.style.display=d.style.display==='block'?'none':'block';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <title>tsks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='tasks.css') }}">
+</head>
+<body>
+    <h2>{{ phase }} Tasks</h2>
+
+<form method="POST">
+    <input name="username" placeholder="Student Username" required>
+    <input name="task" placeholder="Task Description" required>
+    <button>Assign Task</button>
+</form>
+
+<ul>
+{% for u,t in tasks %}
+  <li><b>{{u}}</b> : {{t}}</li>
+{% endfor %}
+</ul>
+    
+</body>
+</html>

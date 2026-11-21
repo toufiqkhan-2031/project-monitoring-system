@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO — Project Overview</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0a0c10,#0f1623);min-height:100vh;font-family:Arial,sans-serif;color:#e2e8f0}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+nav{background:rgba(10,12,16,0.97);border-bottom:1px solid #1e2333;padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:17px;font-weight:900;color:#00e5ff;letter-spacing:3px}
+.nr{display:flex;align-items:center;gap:10px}
+.utag{background:#11141b;border:1px solid #1e2333;border-radius:20px;padding:3px 12px;font-size:11px;color:#94a3b8}
+.utag b{color:#00e5ff}
+.lo{background:transparent;border:1px solid #1e2333;color:#64748b;border-radius:6px;padding:4px 12px;font-size:11px;text-decoration:none}
+.lo:hover{border-color:#ef4444;color:#ef4444}
+.main{max-width:900px;margin:0 auto;padding:32px 20px;position:relative;z-index:1}
+.hero{background:linear-gradient(135deg,#11141b,#181c26);border:1px solid #1e2333;border-radius:16px;padding:26px;margin-bottom:18px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,229,255,0.06),transparent 70%);pointer-events:none}
+.cbdg{display:inline-flex;align-items:center;gap:7px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);border-radius:6px;padding:3px 11px;font-size:11px;color:#00e5ff;letter-spacing:1px;margin-bottom:12px}
+.dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.pname{font-size:28px;font-weight:800;margin-bottom:6px}
+.pobj{color:#64748b;font-size:13px;line-height:1.6;max-width:500px;margin-bottom:18px}
+.mrow{display:flex;gap:12px;flex-wrap:wrap}
+.mi{background:rgba(255,255,255,0.03);border:1px solid #1e2333;border-radius:8px;padding:9px 14px}
+.mil{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.miv{font-size:13px;font-weight:700;color:#e2e8f0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.card{background:#11141b;border:1px solid #1e2333;border-radius:14px;overflow:hidden}
+.ch{background:#181c26;border-bottom:1px solid #1e2333;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
+.ct{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.bdg{padding:2px 10px;border-radius:20px;font-size:10px;text-transform:uppercase}
+.bc{background:rgba(0,229,255,0.1);color:#00e5ff;border:1px solid rgba(0,229,255,0.2)}
+.cb{padding:14px}
+.mr{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(30,35,51,0.5)}
+.mr:last-child{border-bottom:none}
+.minfo{display:flex;align-items:center;gap:9px}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.av-s{background:rgba(0,229,255,0.1);color:#00e5ff;border:1px solid rgba(0,229,255,0.2)}
+.av-tl{background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2)}
+.av-tc{background:rgba(124,58,237,0.1);color:#a78bfa;border:1px solid rgba(124,58,237,0.2)}
+.av-ad{background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)}
+.mn{font-size:13px;color:#e2e8f0}
+.mr-right{display:flex;align-items:center;gap:8px}
+.rpill{padding:2px 9px;border-radius:20px;font-size:10px;text-transform:uppercase}
+.rp-st{background:rgba(0,229,255,0.1);color:#00e5ff;border:1px solid rgba(0,229,255,0.2)}
+.rp-tl{background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2)}
+.rp-tc{background:rgba(124,58,237,0.1);color:#a78bfa;border:1px solid rgba(124,58,237,0.2)}
+.rp-ad{background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)}
+.rm-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171;border-radius:5px;padding:3px 10px;font-size:11px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.rm-btn:hover{background:rgba(239,68,68,0.25);border-color:#ef4444}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-p{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#00e5ff,#7c3aed);color:#fff;text-decoration:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;transition:opacity 0.2s,transform 0.2s}
+.btn-p:hover{opacity:0.9;transform:translateY(-1px)}
+.btn-s{display:inline-flex;align-items:center;gap:6px;background:#11141b;color:#94a3b8;text-decoration:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid #1e2333;transition:all 0.2s}
+.btn-s:hover{border-color:#00e5ff;color:#00e5ff}
+.empty{color:#64748b;font-size:12px;padding:14px 0;text-align:center}
+
+/* Confirm modal */
+.cov{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);align-items:center;justify-content:center}
+.cov.open{display:flex}
+.cmod{background:#11141b;border:1px solid #1e2333;border-radius:14px;padding:28px;width:360px;max-width:92vw;text-align:center}
+.cmod-icon{font-size:38px;margin-bottom:12px}
+.cmod-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.cmod-sub{font-size:13px;color:#64748b;margin-bottom:22px;line-height:1.5}
+.cmod-name{color:#ef4444;font-weight:700}
+.cmod-btns{display:flex;gap:10px}
+.cmod-cancel{flex:1;background:#181c26;border:1px solid #1e2333;color:#94a3b8;border-radius:8px;padding:10px;font-size:13px;cursor:pointer}
+.cmod-cancel:hover{border-color:#64748b;color:#e2e8f0}
+.cmod-confirm{flex:1;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.2s}
+.cmod-confirm:hover{opacity:0.9}
+
+.toast{position:fixed;bottom:18px;right:18px;z-index:300;background:#10b981;color:#fff;border-radius:8px;padding:9px 16px;font-size:12px;transform:translateY(80px);transition:transform 0.3s}
+.toast.show{transform:translateY(0)}
+
+@media(max-width:700px){.g2{grid-template-columns:1fr}.mrow{flex-direction:column}.main{padding:14px}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">GYRO</div>
+  <div class="nr">
+    <div class="utag">Role: <b>{{ role|title }}</b></div>
+    <a href="/logout" class="lo">Logout</a>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="cbdg"><div class="dot"></div>ACTIVE &nbsp;|&nbsp; ID: {{ project.project_code }}</div>
+    <div class="pname">{{ project.project_name }}</div>
+    <div class="pobj">{{ project.objectives or 'No objectives specified.' }}</div>
+    <div class="mrow">
+      <div class="mi"><div class="mil">Team Lead</div><div class="miv">{{ project.team_lead }}</div></div>
+      <div class="mi"><div class="mil">Project Code</div><div class="miv" style="color:#00e5ff;letter-spacing:3px">{{ project.project_code }}</div></div>
+      <div class="mi"><div class="mil">Members</div><div class="miv">{{ team_members|length }}</div></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- MEMBERS CARD -->
+    <div class="card">
+      <div class="ch">
+        <div class="ct">Team Members</div>
+        <span class="bdg bc" id="memCount">{{ team_members|length }} joined</span>
+      </div>
+      <div class="cb" id="memberList">
+        {% if team_members %}
+          {% for m in team_members %}
+          {% set mrole = m[1]|lower %}
+          {% set avclass = 'av-tl' if mrole=='teamlead' else 'av-tc' if mrole=='teacher' else 'av-ad' if mrole=='admin' else 'av-s' %}
+          {% set rpclass = 'rp-tl' if mrole=='teamlead' else 'rp-tc' if mrole=='teacher' else 'rp-ad' if mrole=='admin' else 'rp-st' %}
+          <div class="mr" id="row_{{ m[0]|replace(' ','_') }}">
+            <div class="minfo">
+              <div class="av {{ avclass }}">{{ m[0][0]|upper }}</div>
+              <div class="mn">{{ m[0] }}</div>
+            </div>
+            <div class="mr-right">
+              <span class="rpill {{ rpclass }}">{{ m[1] }}</span>
+              {% if role == 'teamlead' and m[1]|lower != 'teamlead' %}
+              <button class="rm-btn" onclick="confirmRemove('{{ m[0] }}','{{ project.project_code }}')">
+                &#10005; Remove
+              </button>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty">No members yet. Share the Project ID!</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- INFO CARD -->
+    <div class="card">
+      <div class="ch"><div class="ct">Project Info</div></div>
+      <div class="cb">
+        <div style="margin-bottom:14px">
+          <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Share this ID with students</div>
+          <div style="background:#0a0c10;border:2px dashed #1e2333;border-radius:8px;padding:14px;text-align:center;font-size:24px;font-weight:900;color:#00e5ff;letter-spacing:6px">{{ project.project_code }}</div>
+          <div style="color:#64748b;font-size:11px;text-align:center;margin-top:6px">Students enter this to join</div>
+        </div>
+        <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Objectives</div>
+        <div style="font-size:13px;color:#94a3b8;line-height:1.6">{{ project.objectives or 'No objectives specified.' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="actions">
+    {% if role == "teamlead" %}
+      <a href="{{ url_for('assign_tasks', project_code=project.project_code) }}" class="btn-p">&#128221; Assign Tasks</a>
+      <a href="{{ url_for('track_progress', project_code=project.project_code) }}" class="btn-s">&#128200; Track Progress</a>
+    {% elif role == "student" %}
+      <a href="{{ url_for('student_tasks', project_code=project.project_code) }}" class="btn-p">&#9989; My Tasks</a>
+    {% elif role == "teacher" %}
+      <a href="{{ url_for('track_progress', project_code=project.project_code) }}" class="btn-p">&#128200; Track Progress</a>
+    {% elif role == "admin" %}
+      <a href="{{ url_for('track_progress', project_code=project.project_code) }}" class="btn-p">&#128200; Track Progress</a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- CONFIRM REMOVE MODAL -->
+<div class="cov" id="confirmModal">
+  <div class="cmod">
+    <div class="cmod-icon">&#9888;&#65039;</div>
+    <div class="cmod-title">Remove Member?</div>
+    <div class="cmod-sub">Are you sure you want to remove <span class="cmod-name" id="confirmName"></span> from this project?<br>Their tasks will also be deleted.</div>
+    <div class="cmod-btns">
+      <button class="cmod-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="cmod-confirm" id="confirmBtn">Remove</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var pendingUser = null;
+var pendingCode = null;
+
+function confirmRemove(username, code) {
+  pendingUser = username;
+  pendingCode = code;
+  document.getElementById('confirmName').textContent = username;
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmModal').classList.remove('open');
+  pendingUser = null;
+  pendingCode = null;
+}
+
+document.getElementById('confirmBtn').addEventListener('click', function() {
+  if (!pendingUser || !pendingCode) return;
+  var btn = this;
+  btn.textContent = 'Removing...';
+  btn.disabled = true;
+
+  fetch('/remove_member', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'username=' + encodeURIComponent(pendingUser) + '&project_code=' + encodeURIComponent(pendingCode)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (data.status === 'ok') {
+      // Remove row from DOM
+      var row = document.getElementById('row_' + pendingUser.replace(/\s/g, '_'));
+      if (row) row.remove();
+      // Update count badge
+      var cnt = document.querySelectorAll('.mr').length;
+      document.getElementById('memCount').textContent = cnt + ' joined';
+      showToast(pendingUser + ' removed from project');
+    } else {
+      showToast('Error: ' + (data.message || 'Could not remove member'));
+    }
+    closeConfirm();
+    btn.textContent = 'Remove';
+    btn.disabled = false;
+  })
+  .catch(function() {
+    showToast('Network error. Please try again.');
+    closeConfirm();
+    btn.textContent = 'Remove';
+    btn.disabled = false;
+  });
+});
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+// Close modal on backdrop click
+document.getElementById('confirmModal').addEventListener('click', function(e) {
+  if (e.target.id === 'confirmModal') closeConfirm();
+});
+</script>
+</body>
+</html>

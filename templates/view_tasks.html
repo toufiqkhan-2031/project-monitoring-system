@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>view tasks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='tasks.css') }}">
+<body>
+    <h2>Tasks of {{ username }}</h2>
+
+{% for task in tasks %}
+<div class="card">
+    <p><strong>Task:</strong> {{ task[0] }}</p>
+    <p>Status: {{ task[1] }}</p>
+
+    {% if task[2] %}
+        <a href="{{ url_for('static', filename='uploads/' + task[2]) }}">
+            View File
+        </a>
+    {% endif %}
+</div>
+{% endfor %}
+</body>
+</html>

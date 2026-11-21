@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO — Login</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0f0217,#0a0c10,#020617);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+.card{background:rgba(17,20,27,0.95);border:1px solid #1e2333;border-radius:16px;padding:40px 36px;width:360px;text-align:center;z-index:1;animation:slideIn 0.5s ease;box-shadow:0 0 40px rgba(0,229,255,0.08)}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.logo{font-size:28px;font-weight:900;color:#00e5ff;letter-spacing:4px;margin-bottom:6px}
+.subtitle{color:#64748b;font-size:12px;margin-bottom:28px;letter-spacing:1px}
+h2{color:#e2e8f0;font-size:18px;margin-bottom:20px}
+.field{margin-bottom:14px;text-align:left}
+.field label{display:block;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.field input,.field select{width:100%;background:#0a0c10;border:1px solid #1e2333;border-radius:8px;color:#e2e8f0;font-size:13px;padding:10px 14px;outline:none;transition:border-color 0.2s}
+.field input:focus,.field select:focus{border-color:#00e5ff}
+.field select option{background:#0a0c10}
+.captcha-box{background:#0a0c10;border:1px solid #1e2333;border-radius:8px;padding:10px 14px;margin-bottom:14px;text-align:left}
+.captcha-q{font-size:13px;color:#00e5ff;margin-bottom:8px}
+.captcha-box input{width:100%;background:transparent;border:none;color:#e2e8f0;font-size:13px;outline:none}
+.btn{width:100%;background:linear-gradient(135deg,#00e5ff,#7c3aed);color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.2s;margin-top:4px}
+.btn:hover{opacity:0.9;transform:translateY(-1px)}
+.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:6px;padding:8px 12px;font-size:12px;margin-bottom:14px}
+.switch{margin-top:16px;font-size:12px;color:#64748b}
+.switch a{color:#00e5ff;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="card">
+  <div class="logo">GYRO</div>
+  <div class="subtitle">Project Monitoring System</div>
+  <h2>Sign In</h2>
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  <form method="POST" onsubmit="return validateCaptcha()">
+    <div class="field"><label>Username</label><input name="username" placeholder="Enter username" required></div>
+    <div class="field"><label>Password</label><input name="password" type="password" placeholder="Enter password" required></div>
+    <div class="field">
+      <label>Role</label>
+      <select name="role" required>
+        <option value="">Select Role</option>
+        <option value="teamlead">Team Lead</option>
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <div class="captcha-box">
+      <div class="captcha-q" id="captcha-question"></div>
+      <input type="text" id="captcha-input" placeholder="Answer" required>
+    </div>
+    <button type="submit" class="btn">Login &rarr;</button>
+  </form>
+  <div class="switch">No account? <a href="/signup">Sign up</a></div>
+</div>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html

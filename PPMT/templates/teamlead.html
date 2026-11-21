@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO — Team Lead</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0a0c10,#0f1623);min-height:100vh;font-family:Arial,sans-serif;color:#e2e8f0}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+nav{background:rgba(10,12,16,0.95);border-bottom:1px solid #1e2333;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:18px;font-weight:900;color:#00e5ff;letter-spacing:3px}
+.nav-right{display:flex;align-items:center;gap:12px}
+.user-tag{background:#11141b;border:1px solid #1e2333;border-radius:20px;padding:4px 14px;font-size:12px;color:#94a3b8}
+.user-tag b{color:#00e5ff}
+.logout{background:transparent;border:1px solid #1e2333;color:#64748b;border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;text-decoration:none}
+.logout:hover{border-color:#ef4444;color:#ef4444}
+.main{max-width:600px;margin:0 auto;padding:40px 20px;z-index:1;position:relative}
+h1{font-size:24px;font-weight:800;margin-bottom:6px}
+h1 span{color:#00e5ff}
+.sub{color:#64748b;font-size:13px;margin-bottom:32px}
+.card{background:#11141b;border:1px solid #1e2333;border-radius:14px;padding:28px;margin-bottom:20px}
+.card h3{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#00e5ff;margin-bottom:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.field input,.field textarea{width:100%;background:#0a0c10;border:1px solid #1e2333;border-radius:8px;color:#e2e8f0;font-size:13px;padding:10px 14px;outline:none;transition:border-color 0.2s;font-family:Arial,sans-serif}
+.field input:focus,.field textarea:focus{border-color:#00e5ff}
+.field textarea{resize:vertical;min-height:80px}
+.btn{background:linear-gradient(135deg,#00e5ff,#7c3aed);color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.2s}
+.btn:hover{opacity:0.9;transform:translateY(-1px)}
+.success-box{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:20px;text-align:center}
+.success-box p{color:#64748b;font-size:13px;margin-bottom:8px}
+.code-display{font-size:28px;font-weight:900;color:#00e5ff;letter-spacing:6px;margin:8px 0}
+.next-btn{display:inline-block;background:#10b981;color:#fff;text-decoration:none;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;margin-top:12px;transition:opacity 0.2s}
+.next-btn:hover{opacity:0.9}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<nav>
+  <div class="logo">GYRO</div>
+  <div class="nav-right">
+    <div class="user-tag">Logged in as <b>Team Lead</b></div>
+    <a href="/logout" class="logout">Logout</a>
+  </div>
+</nav>
+<div class="main">
+  <h1>Create <span>New Project</span></h1>
+  <p class="sub">Set up your project and share the generated ID with your team</p>
+
+  {% if success %}
+  <div class="card">
+    <div class="success-box">
+      <p>&#9989; Project created successfully!</p>
+      <p style="color:#94a3b8;font-size:12px;margin-bottom:4px">Share this Project ID with your students:</p>
+      <div class="code-display">{{ project_code }}</div>
+      <p style="color:#64748b;font-size:11px;margin-bottom:16px">Students use this ID to join the project</p>
+      <a href="{{ url_for('open_project') }}?code={{ project_code }}" class="next-btn">Go to Project &rarr;</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:28px;margin-bottom:10px">&#128221;</div>
+      <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px">Create New Project</div>
+      <div style="font-size:11px;color:#64748b">Fill the form below to generate a new project ID</div>
+    </div>
+    <div style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:28px;margin-bottom:10px">&#128273;</div>
+      <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px">Enter Existing Project</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:14px">Already have a project? Enter using its ID</div>
+      <a href="/open_project" style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;text-decoration:none;padding:9px 22px;border-radius:8px;font-size:13px;font-weight:700;transition:opacity 0.2s" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">Open Project &rarr;</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Project Details</h3>
+    <form method="POST" action="/create_project">
+      <div class="field"><label>Project Name</label><input name="project_name" placeholder="e.g. Smart Campus App" required></div>
+      <div class="field"><label>Objectives / Description</label><textarea name="objectives" placeholder="Describe your project goals..."></textarea></div>
+      <button type="submit" class="btn">Generate Project ID &rarr;</button>
+    </form>
+    <div style="margin-top:14px;text-align:center">
+      <a href="{{ url_for('open_project') }}" class="next-btn" style="display:inline-block;background:#181c26;border:1px solid #1e2333;color:#94a3b8;text-decoration:none;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:600;transition:all 0.2s" onmouseover="this.style.borderColor='#00e5ff';this.style.color='#00e5ff'" onmouseout="this.style.borderColor='#1e2333';this.style.color='#94a3b8'">
+        &#128273; Go to Project
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

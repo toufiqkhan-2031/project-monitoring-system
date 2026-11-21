@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO — Open Project</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0a0c10,#0f1623);min-height:100vh;font-family:Arial,sans-serif;color:#e2e8f0;display:flex;flex-direction:column}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+nav{background:rgba(10,12,16,0.95);border-bottom:1px solid #1e2333;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:18px;font-weight:900;color:#00e5ff;letter-spacing:3px}
+.logout{background:transparent;border:1px solid #1e2333;color:#64748b;border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;text-decoration:none}
+.logout:hover{border-color:#ef4444;color:#ef4444}
+.center{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;z-index:1}
+.card{background:#11141b;border:1px solid #1e2333;border-radius:16px;padding:40px 36px;width:400px;text-align:center;box-shadow:0 0 40px rgba(0,229,255,0.08)}
+.icon{font-size:40px;margin-bottom:14px}
+h2{font-size:22px;font-weight:800;margin-bottom:6px}
+h2 span{color:#00e5ff}
+.sub{color:#64748b;font-size:13px;margin-bottom:28px}
+.field{margin-bottom:14px;text-align:left}
+.field label{display:block;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.field input{width:100%;background:#0a0c10;border:1px solid #1e2333;border-radius:8px;color:#e2e8f0;font-size:16px;padding:12px 14px;outline:none;transition:border-color 0.2s;text-align:center;letter-spacing:4px;text-transform:uppercase;font-weight:700}
+.field input:focus{border-color:#00e5ff}
+.field input::placeholder{letter-spacing:1px;font-weight:400;text-transform:none;font-size:13px}
+.btn{width:100%;background:linear-gradient(135deg,#00e5ff,#7c3aed);color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.2s;margin-top:4px}
+.btn:hover{opacity:0.9;transform:translateY(-1px)}
+.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:6px;padding:8px 12px;font-size:12px;margin-bottom:14px}
+.hint{color:#64748b;font-size:11px;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<nav>
+  <div class="logo">GYRO</div>
+  <a href="/logout" class="logout">Logout</a>
+</nav>
+<div class="center">
+  <div class="card">
+    <div class="icon">&#128273;</div>
+    <h2>Join a <span>Project</span></h2>
+    <p class="sub">Enter the Project ID given by your Team Lead</p>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="POST">
+      <div class="field">
+        <label>Project ID</label>
+        <input name="project_code" placeholder="e.g. C4R33M" required maxlength="10">
+      </div>
+      <button type="submit" class="btn">Enter Project &rarr;</button>
+    </form>
+    <p class="hint">&#9432; Ask your Team Lead for the Project ID</p>
+  </div>
+</div>
+</body>
+</html>

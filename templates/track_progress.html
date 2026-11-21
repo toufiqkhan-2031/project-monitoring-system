@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO - Progress Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0c10;color:#e2e8f0;font-family:Arial,sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:54px;background:rgba(10,12,16,0.97);border-bottom:1px solid #1e2333}
+.nl{display:flex;align-items:center;gap:12px}
+.logo{font-size:17px;font-weight:900;color:#00e5ff;letter-spacing:3px}
+.ptag{background:#11141b;border:1px solid #1e2333;border-radius:4px;padding:3px 10px;font-size:11px;color:#94a3b8}
+.ptag b{color:#00e5ff}
+.bk{background:#11141b;border:1px solid #1e2333;color:#94a3b8;border-radius:6px;padding:4px 12px;font-size:11px;text-decoration:none;cursor:pointer}
+.bk:hover{border-color:#00e5ff;color:#00e5ff}
+.nr{display:flex;align-items:center;gap:8px}
+.rbdg{padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase}
+.r-tl{background:rgba(0,229,255,0.1);color:#00e5ff;border:1px solid rgba(0,229,255,0.25)}
+.r-tc{background:rgba(124,58,237,0.1);color:#a78bfa;border:1px solid rgba(124,58,237,0.25)}
+.r-ad{background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)}
+.lo{background:transparent;border:1px solid #1e2333;color:#64748b;border-radius:6px;padding:4px 12px;font-size:11px;text-decoration:none}
+.lo:hover{border-color:#ef4444;color:#ef4444}
+.main{position:relative;z-index:1;padding:22px 24px;max-width:1200px;margin:0 auto}
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:14px}
+.htit{font-size:24px;font-weight:800}.htit span{color:#00e5ff}
+.hsub{color:#64748b;font-size:12px;margin-top:4px}
+.dlbdg{background:#11141b;border:1px solid #f59e0b;border-radius:8px;padding:10px 14px;text-align:right;flex-shrink:0}
+.dlbdg .dllbl{font-size:10px;color:#f59e0b;text-transform:uppercase;letter-spacing:1px}
+.dlbdg .dlval{font-size:16px;font-weight:700;color:#e2e8f0;margin-top:2px}
+.dlbdg .dldays{font-size:10px;margin-top:2px}
+.srow{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:16px}
+.sc{background:#11141b;border:1px solid #1e2333;border-radius:10px;padding:15px 16px}
+.slbl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.sval{font-size:28px;font-weight:800;line-height:1}
+.c1{color:#00e5ff}.c2{color:#10b981}.c3{color:#a78bfa}.c4{color:#f59e0b}
+.sft{font-size:10px;color:#64748b;margin-top:3px}
+.aip{margin-bottom:14px;border-radius:12px;border:1px solid #1e2333;position:relative;overflow:hidden;transition:border-color 0.4s}
+.aip.good{border-color:rgba(16,185,129,0.5)}.aip.risk{border-color:rgba(245,158,11,0.5)}.aip.done{border-color:rgba(0,229,255,0.5)}
+.aibg{position:absolute;inset:0;pointer-events:none}
+.aip.good .aibg{background:linear-gradient(135deg,rgba(16,185,129,0.06),transparent 60%)}
+.aip.risk .aibg{background:linear-gradient(135deg,rgba(245,158,11,0.06),transparent 60%)}
+.aip.done .aibg{background:linear-gradient(135deg,rgba(0,229,255,0.06),transparent 60%)}
+.aiinn{position:relative;z-index:1;display:flex;align-items:center;gap:14px;padding:16px 18px;flex-wrap:wrap}
+.aiico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid transparent;flex-shrink:0}
+.aip.good .aiico{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.25)}
+.aip.risk .aiico{background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.25)}
+.aip.done .aiico{background:rgba(0,229,255,0.12);border-color:rgba(0,229,255,0.25)}
+.aim{flex:1;min-width:150px}
+.ailbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:3px}
+.aist{font-size:18px;font-weight:800}
+.aip.good .aist{color:#10b981}.aip.risk .aist{color:#f59e0b}.aip.done .aist{color:#00e5ff}
+.airn{font-size:12px;color:#94a3b8;margin-top:3px;line-height:1.5}
+.aifs{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
+.aif{border-radius:7px;padding:7px 11px;text-align:center;border:1px solid transparent}
+.aif .fv{font-size:14px;font-weight:700}.aif .fl{font-size:9px;color:#64748b;text-transform:uppercase;margin-top:2px}
+.af1{background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.2)}.af1 .fv{color:#10b981}
+.af2{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2)}.af2 .fv{color:#f59e0b}
+.af3{background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.2)}.af3 .fv{color:#a78bfa}
+.aiscn{height:2px;background:linear-gradient(90deg,transparent,#00e5ff,transparent);background-size:200%;animation:scn 1.2s linear infinite}
+@keyframes scn{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.g2{display:grid;grid-template-columns:1.2fr 0.8fr;gap:14px;margin-bottom:14px}
+.pnl{background:#11141b;border:1px solid #1e2333;border-radius:12px;overflow:hidden;margin-bottom:14px}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #1e2333;background:#181c26}
+.pt{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.pb{padding:16px}
+.bdg{padding:2px 10px;border-radius:20px;font-size:10px;text-transform:uppercase}
+.bg{background:rgba(0,229,255,0.1);color:#00e5ff;border:1px solid rgba(0,229,255,0.2)}
+.bgr{background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2)}
+.bp{background:rgba(124,58,237,0.1);color:#a78bfa;border:1px solid rgba(124,58,237,0.2)}
+.bam{background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.2)}
+.slist{display:flex;flex-direction:column;gap:13px}
+.si .st{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.si .si2{display:flex;align-items:center;gap:9px}
+.av{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0}
+.av1{background:rgba(0,229,255,0.15);color:#00e5ff;border:1px solid rgba(0,229,255,0.3)}
+.av2{background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3)}
+.av3{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)}
+.av4{background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)}
+.av5{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+.sn{font-size:13px}.sr{font-size:10px;color:#64748b}
+.ptr{height:5px;background:#181c26;border-radius:99px;overflow:hidden}
+.pf{height:100%;border-radius:99px;transition:width 1s ease}
+.pf1{background:linear-gradient(90deg,#00b8cc,#00e5ff)}.pf2{background:linear-gradient(90deg,#6d28d9,#a78bfa)}
+.pf3{background:linear-gradient(90deg,#059669,#10b981)}.pf4{background:linear-gradient(90deg,#d97706,#f59e0b)}
+.pf5{background:linear-gradient(90deg,#dc2626,#f87171)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tc{background:#181c26;border:1px solid #1e2333;border-radius:8px;padding:11px;cursor:pointer;transition:border-color 0.2s}
+.tc:hover{border-color:#10b981}
+.ttop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+.tn{font-size:11px;font-weight:700}.tt{font-size:11px;color:#94a3b8;margin-bottom:5px}
+.tf{display:flex;align-items:center;justify-content:space-between}
+.td{font-size:10px;color:#64748b}
+.ssb{font-size:10px;color:#10b981;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:4px;padding:2px 7px}
+.mtbl{width:100%;border-collapse:collapse}
+.mtbl th{font-size:10px;color:#64748b;text-transform:uppercase;padding:7px 9px;border-bottom:1px solid #1e2333;text-align:left}
+.mtbl td{padding:9px;font-size:12px;border-bottom:1px solid rgba(30,35,51,0.5)}
+.mtbl tr:last-child td{border-bottom:none}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;font-size:11px;font-weight:700}
+.shi{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)}
+.smi{background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)}
+.slo{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+.mi{background:#0a0c10;border:1px solid #1e2333;border-radius:5px;color:#e2e8f0;font-size:12px;padding:4px 7px;width:46px;text-align:center;outline:none}
+.mi:focus{border-color:#7c3aed}
+.sb{background:#7c3aed;color:#fff;border:none;border-radius:5px;padding:4px 9px;font-size:11px;cursor:pointer}
+.cr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(30,35,51,0.5)}
+.cr:last-child{border-bottom:none}
+.cn{flex:1;font-size:13px}.cs{font-size:10px}
+.cbtn{background:transparent;border:1px solid #00e5ff;color:#00e5ff;border-radius:5px;padding:4px 11px;font-size:11px;cursor:pointer}
+.cbtn:hover{background:#00e5ff;color:#0a0c10}
+.dlset{background:#181c26;border:1px solid rgba(0,229,255,0.3);border-radius:10px;padding:15px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.dlico{width:36px;height:36px;border-radius:8px;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.dlc{display:flex;align-items:center;gap:7px;margin-left:auto;flex-wrap:wrap}
+.di{background:#0a0c10;border:1px solid #1e2333;border-radius:6px;color:#e2e8f0;font-size:12px;padding:6px 9px;outline:none;color-scheme:dark}
+.di:focus{border-color:#00e5ff}
+.dsb{background:#00e5ff;color:#0a0c10;border:none;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:700}
+.dcb{background:transparent;border:1px solid #1e2333;color:#64748b;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer}
+.dtag{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:#00e5ff}
+.mov{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.8);align-items:center;justify-content:center}
+.mov.open{display:flex}
+.modal{background:#11141b;border:1px solid #1e2333;border-radius:13px;padding:22px;width:420px;max-width:94vw}
+.mhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.mtt{font-size:14px;font-weight:700}
+.xb{background:#181c26;border:1px solid #1e2333;color:#64748b;border-radius:50%;width:25px;height:25px;cursor:pointer;font-size:12px}
+.mpr{width:100%;border-radius:8px;background:#181c26;border:1px solid #1e2333;min-height:170px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:12px;padding:14px;text-align:center;overflow:hidden}
+.mmeta{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}
+.mit{background:#181c26;border:1px solid #1e2333;border-radius:6px;padding:7px}
+.mlb{font-size:10px;color:#64748b;text-transform:uppercase;margin-bottom:2px}
+.mv{font-size:12px;color:#e2e8f0}
+.tst{position:fixed;bottom:18px;right:18px;z-index:300;background:#10b981;color:#fff;border-radius:8px;padding:9px 16px;font-size:12px;transform:translateY(80px);transition:transform 0.3s}
+.tst.show{transform:translateY(0)}
+.emp{text-align:center;padding:22px;color:#64748b;font-size:12px}
+@media(max-width:760px){.srow{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.tg{grid-template-columns:1fr}.main{padding:12px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nl">
+    <a class="bk" onclick="history.back()">&larr; Overview</a>
+    <div class="logo">GYRO</div>
+    <div class="ptag">ID: <b>{{ project_code }}</b> &nbsp;|&nbsp; {{ project_name }}</div>
+  </div>
+  <div class="nr">
+    {% if session_role == 'teamlead' %}<span class="rbdg r-tl">Team Lead</span>
+    {% elif session_role == 'teacher' %}<span class="rbdg r-tc">Teacher</span>
+    {% elif session_role == 'admin' %}<span class="rbdg r-ad">Admin</span>
+    {% else %}<span class="rbdg r-tl">{{ session_role }}</span>{% endif %}
+    <a href="/logout" class="lo">Logout</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="hdr">
+    <div>
+      <div class="htit">Progress <span>Dashboard</span></div>
+      <div class="hsub">Viewing as: {{ session_role|title }} &middot; {{ project_name }}</div>
+    </div>
+    <div class="dlbdg">
+      <div class="dllbl">Deadline</div>
+      <div class="dlval" id="dlVal">Not Set</div>
+      <div class="dldays" id="dlDays" style="color:#64748b">Admin can set deadline</div>
+    </div>
+  </div>
+
+  <div class="srow">
+    <div class="sc"><div class="slbl">Enrolled Students</div><div class="sval c1" id="stM">0</div><div class="sft">Joined via Project ID</div></div>
+    <div class="sc"><div class="slbl">Tasks Completed</div><div class="sval c2" id="stD">0</div><div class="sft" id="stDF">of 0 assigned</div></div>
+    <div class="sc"><div class="slbl">In Progress</div><div class="sval c3" id="stP">0</div><div class="sft">Pending submissions</div></div>
+    <div class="sc"><div class="slbl">Overdue</div><div class="sval c4" id="stO">0</div><div class="sft">Needs attention</div></div>
+  </div>
+
+  <div class="aip" id="aiP">
+    <div class="aiscn" id="aiScn"></div>
+    <div class="aibg"></div>
+    <div class="aiinn">
+      <div class="aiico" id="aiIco">&#129302;</div>
+      <div class="aim">
+        <div class="ailbl">AI Prediction &middot; {{ project_name }}</div>
+        <div class="aist" id="aiSt">Analysing&hellip;</div>
+        <div class="airn" id="aiRn">Calculating project health&hellip;</div>
+      </div>
+      <div class="aifs" id="aiFs"></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="pnl">
+      <div class="ph"><div class="pt">Student Progress</div><span class="bdg bg" id="mBdg">0 Members</span></div>
+      <div class="pb"><div class="slist" id="slist"></div></div>
+    </div>
+    <div class="pnl">
+      <div class="ph"><div class="pt">Overall Completion</div><span class="bdg bgr" id="pieBdg">0%</span></div>
+      <div class="pb" style="display:flex;flex-direction:column;align-items:center;gap:11px">
+        <div style="width:160px;height:160px;position:relative;display:flex;align-items:center;justify-content:center">
+          <canvas id="pieChart"></canvas>
+          <div style="position:absolute;text-align:center;pointer-events:none">
+            <div id="pieN" style="font-size:20px;font-weight:800;color:#00e5ff">0</div>
+            <div id="pieS" style="font-size:10px;color:#64748b">of 0 tasks</div>
+          </div>
+        </div>
+        <div style="width:100%;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;align-items:center;gap:7px;font-size:11px"><span style="width:8px;height:8px;border-radius:2px;background:#10b981"></span><span style="color:#64748b">Completed</span><span id="lgD" style="margin-left:auto;color:#10b981">0</span></div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:11px"><span style="width:8px;height:8px;border-radius:2px;background:#a78bfa"></span><span style="color:#64748b">In Progress</span><span id="lgP" style="margin-left:auto;color:#a78bfa">0</span></div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:11px"><span style="width:8px;height:8px;border-radius:2px;background:#f59e0b"></span><span style="color:#64748b">Overdue</span><span id="lgO" style="margin-left:auto;color:#f59e0b">0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pnl">
+    <div class="ph"><div class="pt">Daily Completion Trend</div><span class="bdg bg">Deadline</span></div>
+    <div class="pb"><canvas id="lineChart" style="max-height:160px"></canvas></div>
+  </div>
+
+  <div class="pnl">
+    <div class="ph"><div class="pt">Completed Task Submissions</div><span class="bdg bgr" id="dBdg">0 tasks</span></div>
+    <div class="pb"><div class="tg" id="tgrid"></div></div>
+  </div>
+
+  {% if session_role == 'teacher' %}
+  <div class="pnl">
+    <div class="ph"><div class="pt">Weekly Evaluation &mdash; Assign Marks</div><span class="bdg bp">Out of 10</span></div>
+    <div class="pb">
+      <table class="mtbl">
+        <thead><tr><th>Student</th><th>Tasks</th><th>Wk1 Saved</th><th>Wk2 Saved</th><th>Enter Wk1</th><th>Enter Wk2</th></tr></thead>
+        <tbody id="tchB"></tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if session_role == 'admin' %}
+  <div class="dlset">
+    <div class="dlico">&#128197;</div>
+    <div><div style="font-size:13px;font-weight:700;color:#e2e8f0">Set Project Deadline</div><div style="font-size:10px;color:#64748b;margin-top:2px">Saves to DB &amp; visible to all</div></div>
+    <div class="dlc">
+      <span class="dtag" id="dlTag">No deadline set</span>
+      <input type="date" class="di" id="dlInput">
+      <button class="dsb" onclick="saveDL()">Set Deadline</button>
+      <button class="dcb" onclick="clearDL()">Clear</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    <div class="pnl">
+      <div class="ph"><div class="pt">Teacher Marks</div><span class="bdg bp">Read Only</span></div>
+      <div class="pb">
+        <table class="mtbl">
+          <thead><tr><th>Student</th><th>Wk1</th><th>Wk2</th><th>Avg</th></tr></thead>
+          <tbody id="admB"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pnl">
+      <div class="ph"><div class="pt">Certificates</div><span class="bdg bam">Admin Only</span></div>
+      <div class="pb" id="certL"></div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="mov" id="modal">
+  <div class="modal">
+    <div class="mhd"><div class="mtt" id="mTit">Task</div><button class="xb" onclick="closeM()">&#10005;</button></div>
+    <div class="mpr" id="mPr">No screenshot</div>
+    <div class="mmeta" id="mMeta"></div>
+  </div>
+</div>
+<div class="tst" id="tst"></div>
+
+<div id="fd"
+  data-code="{{ project_code|default('') }}"
+  data-name="{{ project_name|default('') }}"
+  data-dl="{{ deadline|default('') }}"
+  data-role="{{ session_role|default('') }}"
+  data-s='{{ students_json|default("[]")|safe }}'
+  data-t='{{ tasks_json|default("[]")|safe }}'
+  style="display:none"></div>
+
+<script>
+var fd=document.getElementById('fd');
+var PC=fd.getAttribute('data-code')||'';
+var PN=fd.getAttribute('data-name')||'';
+var DL=fd.getAttribute('data-dl')||'';
+var ROLE=fd.getAttribute('data-role')||'';
+var S=[],T=[];
+try{S=JSON.parse(fd.getAttribute('data-s'))||[];}catch(e){console.error('S parse:',e);}
+try{T=JSON.parse(fd.getAttribute('data-t'))||[];}catch(e){console.error('T parse:',e);}
+
+var AVC=['av1','av2','av3','av4','av5'];
+var PFC=['pf1','pf2','pf3','pf4','pf5'];
+var COL={av1:'#00e5ff',av2:'#a78bfa',av3:'#10b981',av4:'#f59e0b',av5:'#f87171'};
+
+function stats(){
+  var tot=0,done=0,over=0;
+  S.forEach(function(s){tot+=s.tasksAssigned;done+=s.tasksCompleted;over+=s.tasksOverdue;});
+  return{tot:tot,done:done,over:over,prog:Math.max(0,tot-done-over)};
+}
+
+function renderStats(){
+  var x=stats();
+  document.getElementById('stM').textContent=S.length;
+  document.getElementById('stD').textContent=x.done;
+  document.getElementById('stDF').textContent='of '+x.tot+' assigned';
+  document.getElementById('stP').textContent=x.prog;
+  document.getElementById('stO').textContent=x.over;
+  document.getElementById('mBdg').textContent=S.length+' Members';
+}
+
+function renderStudents(){
+  var el=document.getElementById('slist');
+  if(!S.length){el.innerHTML='<div class="emp">No students enrolled yet.<br><span style="color:#00e5ff">Share ID: '+PC+'</span></div>';return;}
+  el.innerHTML=S.map(function(s,i){
+    var pct=s.tasksAssigned>0?Math.round(s.tasksCompleted/s.tasksAssigned*100):0;
+    var ac=AVC[i%5],pc=PFC[i%5],col=COL[ac];
+    return '<div class="si"><div class="st"><div class="si2"><div class="av '+ac+'">'+s.initials+'</div><div><div class="sn">'+s.name+'</div><div class="sr">Student</div></div></div><div style="font-size:11px"><b style="color:'+col+'">'+s.tasksCompleted+'</b><span style="color:#64748b"> / '+s.tasksAssigned+'</span> <span style="font-size:10px;color:#64748b">('+pct+'%)</span></div></div><div class="ptr"><div class="pf '+pc+'" style="width:'+pct+'%"></div></div></div>';
+  }).join('');
+}
+
+function renderTasks(){
+  var el=document.getElementById('tgrid');
+  var ids=new Set(S.map(function(s){return s.id;}));
+  var vis=T.filter(function(t){return ids.has(t.sid);});
+  document.getElementById('dBdg').textContent=vis.length+' task'+(vis.length!==1?'s':'');
+  if(!vis.length){el.innerHTML='<div class="emp" style="grid-column:1/-1">No completed tasks yet.</div>';return;}
+  el.innerHTML=vis.map(function(t){
+    var s=S.find(function(x){return x.id===t.sid;})||{initials:'?',avClass:'av1',name:t.sid};
+    var ac=s.avClass||'av1';
+    return '<div class="tc" onclick="openM('+t.id+')"><div class="ttop"><div style="display:flex;align-items:center;gap:5px"><div class="av '+ac+'" style="width:21px;height:21px;font-size:9px">'+s.initials+'</div><span class="tn">'+s.name+'</span></div><span class="bdg bgr" style="font-size:9px">'+t.tag+'</span></div><div class="tt">'+t.task+'</div><div class="tf"><span class="td">'+t.date+'</span><span class="ssb">Screenshot</span></div></div>';
+  }).join('');
+}
+
+function renderTeacher(){
+  var tb=document.getElementById('tchB');
+  if(!tb)return;
+  if(!S.length){tb.innerHTML='<tr><td colspan="7" class="emp">No enrolled students.</td></tr>';return;}
+  tb.innerHTML=S.map(function(s,i){
+    var ac=AVC[i%5];
+    var sid=s.id.replace(/\s/g,'_');
+    var w1cls=s.marks.wk6>=8?'shi':s.marks.wk6>=6?'smi':'slo';
+    var w2cls=s.marks.wk7>=8?'shi':s.marks.wk7>=6?'smi':'slo';
+    return '<tr>'
+      +'<td><div style="display:flex;align-items:center;gap:7px"><div class="av '+ac+'" style="width:21px;height:21px;font-size:9px">'+s.initials+'</div>'+s.name+'</div></td>'
+      +'<td><span class="bdg bgr">'+s.tasksCompleted+'/'+s.tasksAssigned+'</span></td>'
+      +'<td><span class="sp '+w1cls+'" id="saved_'+sid+'_1">'+s.marks.wk6+'</span></td>'
+      +'<td><span class="sp '+w2cls+'" id="saved_'+sid+'_2">'+s.marks.wk7+'</span></td>'
+      +'<td><input class="mi" type="number" min="0" max="10" placeholder="0" id="mi1_'+i+'"><button class="sb" style="margin-left:4px" onclick="saveMark(\'mi1_'+i+'\',\''+s.id+'\',1)">Wk1</button></td>'
+      +'<td><input class="mi" type="number" min="0" max="10" placeholder="0" id="mi2_'+i+'"><button class="sb" style="margin-left:4px" onclick="saveMark(\'mi2_'+i+'\',\''+s.id+'\',2)">Wk2</button></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function renderAdmin(){
+  var ab=document.getElementById('admB');
+  var cl=document.getElementById('certL');
+  if(!ab&&!cl)return;
+  if(!S.length){
+    if(ab)ab.innerHTML='<tr><td colspan="4" class="emp">No enrolled students.</td></tr>';
+    if(cl)cl.innerHTML='<div class="emp">No enrolled students.</div>';
+    return;
+  }
+  if(ab){ab.innerHTML=S.map(function(s){
+    var avg=((s.marks.wk6+s.marks.wk7)/2).toFixed(1);
+    var col=avg>=7?'#10b981':avg>=5?'#f59e0b':'#f87171';
+    return '<tr><td>'+s.name+'</td><td><span class="sp smi">'+s.marks.wk6+'</span></td><td><span class="sp smi">'+s.marks.wk7+'</span></td><td style="color:'+col+';font-weight:700">'+avg+'</td></tr>';
+  }).join('');}
+  if(cl){cl.innerHTML=S.map(function(s){
+    var pct=s.tasksAssigned>0?Math.round(s.tasksCompleted/s.tasksAssigned*100):0;
+    var col=pct>=70?'#10b981':pct>=50?'#f59e0b':'#f87171';
+    var txt=pct>=70?'Eligible - '+pct+'%':pct>=50?'Borderline - '+pct+'%':'Not eligible - '+pct+'%';
+    var btn=pct>=70?'<button class="cbtn" onclick="goToCert(\''+s.name+'\')">Generate</button>':'<button class="cbtn" style="border-color:#64748b;color:#64748b;cursor:not-allowed" disabled>Locked</button>';
+    return '<div class="cr"><div><div class="cn">'+s.name+'</div><div class="cs" style="color:'+col+'">'+txt+'</div></div>'+btn+'</div>';
+  }).join('');}
+}
+
+function renderPie(){
+  var x=stats();
+  function p(n){return x.tot>0?((n/x.tot)*100).toFixed(1):'0.0';}
+  document.getElementById('pieN').textContent=x.done;
+  document.getElementById('pieS').textContent='of '+x.tot+' tasks';
+  document.getElementById('pieBdg').textContent=p(x.done)+'%';
+  document.getElementById('lgD').textContent=x.done+' ('+p(x.done)+'%)';
+  document.getElementById('lgP').textContent=x.prog+' ('+p(x.prog)+'%)';
+  document.getElementById('lgO').textContent=x.over+' ('+p(x.over)+'%)';
+  new Chart(document.getElementById('pieChart'),{type:'doughnut',data:{datasets:[{data:[x.done,x.prog,x.over],backgroundColor:['rgba(16,185,129,0.8)','rgba(124,58,237,0.7)','rgba(245,158,11,0.7)'],borderColor:['#10b981','#7c3aed','#f59e0b'],borderWidth:2,hoverOffset:4}]},options:{cutout:'72%',plugins:{legend:{display:false}},animation:{duration:900}}});
+}
+
+function runAI(){
+  var panel=document.getElementById('aiP'),scn=document.getElementById('aiScn');
+  panel.className='aip';scn.style.display='block';
+  var x=stats(),n=S.length;
+  var cp=x.tot>0?Math.round(x.done/x.tot*100):0;
+  var op=x.tot>0?Math.round(x.over/x.tot*100):0;
+  var vel=n>0?(x.done/n).toFixed(1):0;
+  var lag=S.filter(function(s){return s.tasksAssigned>0&&s.tasksCompleted/s.tasksAssigned<0.4;}).length;
+  var cls,st,rn,ico;
+  if(!n){cls='risk';st='No Students Enrolled';rn='Share Project ID: '+PC;ico='⚠️';}
+  else if(cp>=90){cls='done';st='Project Completed';rn=cp+'% tasks done!';ico='🏆';}
+  else if(cp>=60&&op<=15&&lag<=1){cls='good';st='Going Good';rn=cp+'% complete, on track!';ico='✅';}
+  else if(op>=20||lag>=2||cp<40){cls='risk';st='At Risk';rn=lag>=2?(lag+' student'+(lag>1?'s':'')+' behind.'):(op+'% overdue.');ico='🚨';}
+  else{cls='good';st='Going Good';rn=cp+'% complete. Keep going!';ico='✅';}
+  setTimeout(function(){
+    scn.style.display='none';panel.className='aip '+cls;
+    document.getElementById('aiIco').textContent=ico;
+    document.getElementById('aiSt').textContent=st;
+    document.getElementById('aiRn').textContent=rn;
+    document.getElementById('aiFs').innerHTML='<div class="aif af1"><div class="fv">'+cp+'%</div><div class="fl">Done</div></div><div class="aif af2"><div class="fv">'+op+'%</div><div class="fl">Overdue</div></div><div class="aif af3"><div class="fv">'+vel+'</div><div class="fl">Avg/Student</div></div>';
+  },800);
+}
+
+function openM(id){
+  var t=T.find(function(x){return x.id===id;});if(!t)return;
+  var s=S.find(function(x){return x.id===t.sid;})||{name:t.sid};
+  document.getElementById('mTit').textContent=t.task;
+  var pr=document.getElementById('mPr');
+  pr.innerHTML=t.screenshot?'<img src="/static/uploads/'+t.screenshot+'" style="width:100%;border-radius:6px;max-height:200px;object-fit:contain">':'<span>No screenshot uploaded</span>';
+  document.getElementById('mMeta').innerHTML='<div class="mit"><div class="mlb">Student</div><div class="mv">'+s.name+'</div></div><div class="mit"><div class="mlb">Project</div><div class="mv" style="color:#00e5ff">'+PC+'</div></div><div class="mit"><div class="mlb">Module</div><div class="mv">'+t.tag+'</div></div><div class="mit"><div class="mlb">Status</div><div class="mv" style="color:#10b981">Completed</div></div>';
+  document.getElementById('modal').classList.add('open');
+}
+function closeM(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')closeM();});
+
+function toast(msg){var t=document.getElementById('tst');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
+function saveMark(id,name,week){
+  var v=document.getElementById(id).value;
+  if(v===''||v<0||v>10){toast('Enter a mark between 0 and 10');return;}
+  fetch('/save_mark',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'project_code='+encodeURIComponent(PC)+'&student_username='+encodeURIComponent(name)+'&week_number='+week+'&marks='+v
+  }).then(function(r){return r.json();})
+  .then(function(){
+    toast('Saved: '+name+' Week '+week+' = '+v+'/10');
+    // update display immediately
+    var el=document.getElementById('saved_'+name.replace(/\s/g,'_')+'_'+week);
+    if(el){el.textContent=v;el.className='sp '+(v>=8?'shi':v>=6?'smi':'slo');}
+  }).catch(function(e){console.error(e);toast('Error saving mark');});
+}
+function genCert(name){toast('Certificate generated for '+name);}
+function goToCert(name){
+  window.location.href='/certificate?student='+encodeURIComponent(name)+'&project='+encodeURIComponent(PN)+'&code='+encodeURIComponent(PC);
+}
+
+var dlDate=DL||null;
+function updateDL(){
+  var dv=document.getElementById('dlVal'),dd=document.getElementById('dlDays'),dt=document.getElementById('dlTag');
+  if(!dlDate){dv.textContent='Not Set';dv.style.color='#64748b';dd.textContent='Admin can set deadline';dd.style.color='#64748b';if(dt)dt.textContent='No deadline set';return;}
+  var now=new Date();now.setHours(0,0,0,0);
+  var dl=new Date(dlDate);dl.setHours(0,0,0,0);
+  var diff=Math.ceil((dl-now)/86400000);
+  var opts={year:'numeric',month:'short',day:'numeric'};
+  dv.textContent=dl.toLocaleDateString('en-US',opts);dv.style.color=diff<=7?'#f59e0b':'#e2e8f0';
+  if(diff>0){dd.textContent=diff+' day'+(diff!==1?'s':'')+' remaining';dd.style.color=diff<=7?'#f59e0b':'#10b981';}
+  else if(diff===0){dd.textContent='Due today!';dd.style.color='#ef4444';}
+  else{dd.textContent='Passed '+Math.abs(diff)+'d ago';dd.style.color='#ef4444';}
+  if(dt)dt.textContent='Current: '+dl.toLocaleDateString('en-US',opts);
+}
+function saveDL(){
+  var v=document.getElementById('dlInput').value;
+  if(!v){toast('Pick a date first');return;}
+  dlDate=v;updateDL();
+  fetch('/set_deadline',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'project_code='+PC+'&deadline='+v})
+  .then(function(){toast('Deadline saved!');}).catch(function(){toast('Saved locally.');});
+}
+function clearDL(){dlDate=null;var i=document.getElementById('dlInput');if(i)i.value='';updateDL();toast('Deadline cleared');}
+updateDL();
+
+Chart.defaults.color='#64748b';Chart.defaults.borderColor='#1e2333';
+new Chart(document.getElementById('lineChart'),{
+  type:'line',
+  data:{
+    labels:['Day1','Day2','Day3','Day4','Day5','Day6','Today'],
+    datasets:[
+      {label:'Completed',data:[0,0,0,0,0,0,stats().done],borderColor:'#00e5ff',backgroundColor:'rgba(0,229,255,0.08)',borderWidth:2,pointBackgroundColor:'#00e5ff',pointRadius:3,tension:0.4,fill:true},
+      {label:'Target',data:[0,1,2,3,4,5,stats().tot],borderColor:'rgba(124,58,237,0.5)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0.4}
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{labels:{font:{size:11},padding:12,usePointStyle:true}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{color:'#1e2333'},ticks:{font:{size:10}}},y:{grid:{color:'#1e2333'},min:0,ticks:{font:{size:10},stepSize:1}}},animation:{duration:1100}}
+});
+
+renderStats();
+renderStudents();
+renderTasks();
+renderPie();
+renderTeacher();
+renderAdmin();
+runAI();
+</script>
+</body>
+</html>

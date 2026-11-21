@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYRO — My Tasks</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#0a0c10,#0f1623);min-height:100vh;font-family:Arial,sans-serif;color:#e2e8f0}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+nav{background:rgba(10,12,16,0.97);border-bottom:1px solid #1e2333;padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:17px;font-weight:900;color:#00e5ff;letter-spacing:3px}
+.nav-r{display:flex;align-items:center;gap:10px}
+.back-btn{background:#11141b;border:1px solid #1e2333;color:#94a3b8;border-radius:6px;padding:4px 12px;font-size:11px;text-decoration:none}
+.back-btn:hover{border-color:#00e5ff;color:#00e5ff}
+.logout{background:transparent;border:1px solid #1e2333;color:#64748b;border-radius:6px;padding:4px 12px;font-size:11px;text-decoration:none}
+.logout:hover{border-color:#ef4444;color:#ef4444}
+.main{max-width:780px;margin:0 auto;padding:28px 20px;position:relative;z-index:1}
+.page-header{margin-bottom:24px}
+h1{font-size:22px;font-weight:800}
+h1 span{color:#00e5ff}
+.sub{color:#64748b;font-size:13px;margin-top:4px}
+.flash{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981;border-radius:8px;padding:10px 16px;font-size:13px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:22px}
+.stat{background:#11141b;border:1px solid #1e2333;border-radius:10px;padding:14px 16px;text-align:center}
+.snum{font-size:28px;font-weight:800;line-height:1}
+.snum.c1{color:#00e5ff}.snum.c2{color:#10b981}.snum.c3{color:#f59e0b}
+.slbl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.task-card{background:#11141b;border:1px solid #1e2333;border-radius:14px;padding:20px;margin-bottom:14px;transition:border-color 0.2s}
+.task-card.done{border-color:rgba(16,185,129,0.3)}
+.task-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px}
+.task-title{font-size:15px;font-weight:700;flex:1;line-height:1.4}
+.status-pill{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.pill-pending{background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)}
+.pill-done{background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.25)}
+
+/* Upload area */
+.upload-section{border-top:1px solid #1e2333;padding-top:14px}
+.upload-area{border:2px dashed #1e2333;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.upload-area:hover{border-color:#00e5ff;background:rgba(0,229,255,0.03)}
+.upload-area.has-file{border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.03)}
+.upload-area.dragover{border-color:#00e5ff;background:rgba(0,229,255,0.06)}
+.ua-icon{font-size:28px;margin-bottom:8px}
+.ua-text{font-size:13px;color:#64748b}
+.ua-text b{color:#00e5ff}
+.ua-hint{font-size:11px;color:#64748b;margin-top:4px}
+.file-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+
+/* Image preview */
+.preview-box{display:none;margin-top:12px;background:#181c26;border:1px solid #1e2333;border-radius:10px;overflow:hidden}
+.preview-box.show{display:block}
+.preview-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #1e2333}
+.preview-fname{font-size:12px;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:10px}
+.preview-img-wrap{padding:12px;display:flex;justify-content:center}
+.preview-img{max-width:100%;max-height:220px;border-radius:8px;object-fit:contain}
+.preview-actions{display:flex;gap:8px;padding:10px 14px;border-top:1px solid #1e2333}
+.btn-change{background:#11141b;border:1px solid #1e2333;color:#94a3b8;border-radius:6px;padding:7px 14px;font-size:12px;cursor:pointer;flex:1;position:relative;overflow:hidden;text-align:center}
+.btn-change:hover{border-color:#00e5ff;color:#00e5ff}
+.btn-change input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.btn-remove{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171;border-radius:6px;padding:7px 14px;font-size:12px;cursor:pointer}
+.btn-remove:hover{background:rgba(239,68,68,0.2)}
+
+/* Submit button */
+.submit-row{display:flex;gap:10px;margin-top:14px}
+.btn-submit{flex:1;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-submit:hover{opacity:0.9;transform:translateY(-1px)}
+.btn-submit:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* Completed state */
+.completed-info{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+.comp-icon{font-size:28px}
+.comp-text{flex:1}
+.comp-label{font-size:13px;color:#10b981;font-weight:700}
+.comp-sub{font-size:11px;color:#64748b;margin-top:2px}
+.view-ss{display:inline-flex;align-items:center;gap:6px;color:#00e5ff;font-size:12px;text-decoration:none;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);border-radius:6px;padding:6px 12px;margin-top:8px;transition:all 0.2s}
+.view-ss:hover{background:rgba(0,229,255,0.15)}
+
+/* Image modal */
+.img-modal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.9);align-items:center;justify-content:center}
+.img-modal.open{display:flex}
+.img-modal img{max-width:90vw;max-height:85vh;border-radius:10px;object-fit:contain}
+.img-modal-close{position:fixed;top:18px;right:18px;background:#11141b;border:1px solid #1e2333;color:#e2e8f0;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+
+.empty{text-align:center;padding:60px 20px;color:#64748b}
+.empty-icon{font-size:40px;margin-bottom:14px}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">GYRO</div>
+  <div class="nav-r">
+    <a href="javascript:history.back()" class="back-btn">&larr; Overview</a>
+    <a href="/logout" class="logout">Logout</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <h1>My <span>Tasks</span></h1>
+    <p class="sub">Hello {{ username }} &mdash; view and submit your assigned tasks</p>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="flash">&#9989; {{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% set total = tasks|length %}
+  {% set done_tasks = tasks|selectattr('2','equalto','Completed')|list|length %}
+  {% set pending = total - done_tasks %}
+
+  <div class="stats">
+    <div class="stat"><div class="snum c1">{{ total }}</div><div class="slbl">Total Tasks</div></div>
+    <div class="stat"><div class="snum c2">{{ done_tasks }}</div><div class="slbl">Completed</div></div>
+    <div class="stat"><div class="snum c3">{{ pending }}</div><div class="slbl">Pending</div></div>
+  </div>
+
+  {% if tasks %}
+    {% for task in tasks %}
+    <div class="task-card {% if task[2] == 'Completed' %}done{% endif %}">
+      <div class="task-top">
+        <div class="task-title">{{ task[1] }}</div>
+        <span class="status-pill {% if task[2] == 'Completed' %}pill-done{% else %}pill-pending{% endif %}">
+          {{ task[2] }}
+        </span>
+      </div>
+
+      <div class="upload-section">
+        {% if task[2] == 'Completed' %}
+          <div class="completed-info">
+            <div class="comp-icon">&#127881;</div>
+            <div class="comp-text">
+              <div class="comp-label">Task Completed!</div>
+              <div class="comp-sub">Screenshot submitted successfully</div>
+              {% if task[3] %}
+                <a href="javascript:void(0)" onclick="openImgModal('/static/uploads/{{ task[3] }}')" class="view-ss">
+                  &#128247; View Screenshot
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <form method="POST" enctype="multipart/form-data" id="form_{{ task[0] }}">
+            <input type="hidden" name="task_id" value="{{ task[0] }}">
+
+            <!-- DROP ZONE -->
+            <div class="upload-area" id="area_{{ task[0] }}"
+                 ondragover="dragOver(event,'{{ task[0] }}')"
+                 ondragleave="dragLeave(event,'{{ task[0] }}')"
+                 ondrop="dropFile(event,'{{ task[0] }}')">
+              <input type="file" name="file" id="file_{{ task[0] }}" accept="image/*"
+                     onchange="fileSelected(this,'{{ task[0] }}')">
+              <div class="ua-icon">&#128247;</div>
+              <div class="ua-text"><b>Click to choose</b> or drag &amp; drop</div>
+              <div class="ua-hint">PNG, JPG, JPEG supported</div>
+            </div>
+
+            <!-- PREVIEW -->
+            <div class="preview-box" id="preview_{{ task[0] }}">
+              <div class="preview-header">
+                <span class="preview-fname" id="fname_{{ task[0] }}">filename.jpg</span>
+                <span style="font-size:10px;color:#10b981;font-weight:700">&#10003; Ready</span>
+              </div>
+              <div class="preview-img-wrap">
+                <img class="preview-img" id="pimg_{{ task[0] }}" src="" alt="Preview">
+              </div>
+              <div class="preview-actions">
+                <div class="btn-change">
+                  &#128260; Change Image
+                  <input type="file" accept="image/*" onchange="fileSelected(this,'{{ task[0] }}')">
+                </div>
+                <button type="button" class="btn-remove" onclick="removeFile('{{ task[0] }}')">
+                  &#128465; Remove
+                </button>
+              </div>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="submit-row">
+              <button type="submit" class="btn-submit" id="sbtn_{{ task[0] }}" disabled>
+                &#9989; Mark as Complete
+              </button>
+            </div>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+    <div class="empty">
+      <div class="empty-icon">&#128221;</div>
+      <div style="font-size:16px;font-weight:700;color:#94a3b8;margin-bottom:8px">No tasks assigned yet</div>
+      <div>Your team lead hasn't assigned any tasks yet</div>
+    </div>
+  {% endif %}
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="img-modal" id="imgModal" onclick="closeImgModal()">
+  <button class="img-modal-close" onclick="closeImgModal()">&#10005;</button>
+  <img id="modalImg" src="" alt="Screenshot">
+</div>
+
+<script>
+function fileSelected(input, taskId) {
+  var file = input.files[0];
+  if (!file) return;
+
+  // Copy file to the actual form input if triggered from change button
+  var formInput = document.getElementById('file_' + taskId);
+  if (input !== formInput) {
+    var dt = new DataTransfer();
+    dt.items.add(file);
+    formInput.files = dt.files;
+  }
+
+  // Show preview
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('pimg_' + taskId).src = e.target.result;
+    document.getElementById('fname_' + taskId).textContent = file.name;
+    document.getElementById('area_' + taskId).style.display = 'none';
+    document.getElementById('preview_' + taskId).classList.add('show');
+    document.getElementById('sbtn_' + taskId).disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeFile(taskId) {
+  // Clear the file input
+  var input = document.getElementById('file_' + taskId);
+  input.value = '';
+  // Hide preview, show upload area
+  document.getElementById('preview_' + taskId).classList.remove('show');
+  document.getElementById('area_' + taskId).style.display = '';
+  document.getElementById('sbtn_' + taskId).disabled = true;
+}
+
+function dragOver(e, taskId) {
+  e.preventDefault();
+  document.getElementById('area_' + taskId).classList.add('dragover');
+}
+
+function dragLeave(e, taskId) {
+  document.getElementById('area_' + taskId).classList.remove('dragover');
+}
+
+function dropFile(e, taskId) {
+  e.preventDefault();
+  document.getElementById('area_' + taskId).classList.remove('dragover');
+  var file = e.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) {
+    alert('Please drop an image file');
+    return;
+  }
+  var input = document.getElementById('file_' + taskId);
+  var dt = new DataTransfer();
+  dt.items.add(file);
+  input.files = dt.files;
+  fileSelected(input, taskId);
+}
+
+function openImgModal(src) {
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').classList.add('open');
+}
+
+function closeImgModal() {
+  document.getElementById('imgModal').classList.remove('open');
+}
+</script>
+</body>
+</html>
